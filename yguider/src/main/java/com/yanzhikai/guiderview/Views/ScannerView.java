@@ -55,7 +55,7 @@ public class ScannerView extends View {
 
     private void init() {
         initPaint();
-        setBackgroundColor(Color.BLUE);
+//        setBackgroundColor(Color.BLUE);
     }
 
 
@@ -92,8 +92,6 @@ public class ScannerView extends View {
         layoutRegion.left = this.sLeft = sRegion.centerX();
         layoutRegion.right = this.sRight = sRegion.centerX();
 
-
-
         RelativeLayout.LayoutParams layoutParams = (RelativeLayout.LayoutParams) getLayoutParams();
         layoutParams.width = 0;
         layoutParams.height = 0;
@@ -126,6 +124,7 @@ public class ScannerView extends View {
     }
 
     public void setLayoutRegion(RectF lr){
+        layoutRegion.set(lr);
         layout((int)lr.left,(int)lr.top,(int)lr.right,(int)lr.bottom);
     }
 

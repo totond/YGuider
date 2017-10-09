@@ -346,6 +346,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 //                mGuidePopupWindow.showAtLocation(MaskLayout.this, Gravity.CENTER,0,0);
 //                mGuidePopupWindow.showAsDropDown(mScannerList.get(0),0,0);
 
+                Log.d(TAG, "onAnimationEnd: " + scannerView.getLayoutRegion().toString());
                 mGuidePopupWindow.showAsScannerTop(
                         mScannerList.get(0)
                         ,mScanTargets.get(scanIndex).getwOffsetX()

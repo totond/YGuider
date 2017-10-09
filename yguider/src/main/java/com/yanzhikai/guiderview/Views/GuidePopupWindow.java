@@ -1,6 +1,7 @@
 package com.yanzhikai.guiderview.Views;
 
 import android.content.Context;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -59,11 +60,13 @@ public class GuidePopupWindow extends PopupWindow {
     }
 
     public void showAsScannerTop(ScannerView view, int offsetX, int offsetY){
-        showAsDropDown(view, offsetX,(int)-(view.getsRegion().height() + offsetY));
-//        showAtLocation((View) view.getParent()
-//                ,Gravity.NO_GRAVITY
-//                ,(int)view.getsRegion().left
-//                ,(int)(view.getsRegion().top));
+//        showAsDropDown(view, offsetX,(int)-(0));
+        int[] location = {0,0};
+        view.getLocationOnScreen(location);
+        showAtLocation((View) view.getParent()
+                , Gravity.NO_GRAVITY
+                ,location[0]
+                ,location[1]);
     }
 
 
