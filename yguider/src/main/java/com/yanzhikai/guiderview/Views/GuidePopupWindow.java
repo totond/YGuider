@@ -1,6 +1,7 @@
 package com.yanzhikai.guiderview.Views;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,9 @@ public class GuidePopupWindow extends PopupWindow {
         setContentView(mContentView);
         setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
         setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
+//        setWidth(300);
+//        setHeight(200);
+
 
         mTyperTextView = (TyperTextView) mContentView.findViewById(R.id.ttv_tips);
         tv_jump = (TextView) mContentView.findViewById(R.id.tv_jump);
@@ -53,6 +57,8 @@ public class GuidePopupWindow extends PopupWindow {
                 }
             }
         });
+
+
     }
 
     public void setContentBackgroundId(int id){
@@ -61,20 +67,22 @@ public class GuidePopupWindow extends PopupWindow {
 
     public void showAsScannerTop(ScannerView view, int offsetX, int offsetY){
 //        showAsDropDown(view, offsetX,(int)-(0));
+//        showAsDropDown(view,0,0,Gravity.LEFT);
         int[] location = {0,0};
         view.getLocationOnScreen(location);
         showAtLocation((View) view.getParent()
-                , Gravity.NO_GRAVITY
+                ,  Gravity.BOTTOM
                 ,location[0]
                 ,location[1]);
+        Log.d("window", "showAsScannerTop: " + getContentView().getWidth());
     }
 
 
 
     public void showGuideText(String text, int speed){
 //        mTyperTextView.setTyperSpeed(speed);
-//        mTyperTextView.animateText(text);
-        mTyperTextView.setText(text);
+        mTyperTextView.animateText(text);
+//        mTyperTextView.setText(text);
     }
 
     public void setOnWindowClickListener(OnWindowClickListener mOnWindowClickListener) {

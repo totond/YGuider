@@ -27,6 +27,7 @@ public class TyperTextView extends TextView {
     private CharSequence mText;
     private ShowHandler handler;
     private int charIncrease;
+    private int showingIncrease;
     private int typerSpeed;
     private AnimationListener animationListener;
 
@@ -43,7 +44,7 @@ public class TyperTextView extends TextView {
 
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TyperTextView);
         typerSpeed = typedArray.getInt(R.styleable.TyperTextView_typerSpeed, 100);
-        charIncrease = typedArray.getInt(R.styleable.TyperTextView_charIncrease, 2);
+        charIncrease = typedArray.getInt(R.styleable.TyperTextView_charIncrease, 1);
         typedArray.recycle();
 
         //使用随机数，增加飘忽感
@@ -72,6 +73,7 @@ public class TyperTextView extends TextView {
 //                return false;
 //            }
 //        });
+
     }
 
     public void setAnimationListener(AnimationListener listener) {
@@ -105,6 +107,8 @@ public class TyperTextView extends TextView {
         }
 
         mText = text;
+        showingIncrease = charIncrease;
+        Log.d(TAG, "animateText: " + mText);
         setText("");
         Message message = Message.obtain();
         message.what = SHOWING;
@@ -120,6 +124,7 @@ public class TyperTextView extends TextView {
 
     @Override
     protected void onDetachedFromWindow() {
+        Log.d(TAG, "onDetachedFromWindow: ");
         super.onDetachedFromWindow();
         handler.removeCallbacksAndMessages(null);
     }
@@ -129,15 +134,17 @@ public class TyperTextView extends TextView {
         @Override
         public void handleMessage(Message msg) {
             int currentLength = getText().length();
-            if (currentLength + charIncrease > mText.length()) {
-                charIncrease = mText.length() - currentLength;
+            if (currentLength + showingIncrease > mText.length()) {
+                showingIncrease = mText.length() - currentLength;
             }
             Log.d(TAG, "handleMessage: currentLength " + currentLength);
             Log.d(TAG, "handleMessage: mText.length() " + mText.length());
             switch (msg.what){
                 case SHOWING:
                     if (currentLength < mText.length()) {
-                        append(mText.subSequence(currentLength, currentLength + charIncrease));
+
+                        append(mText.subSequence(currentLength, currentLength + showingIncrease));
+
                         long randomTime = typerSpeed + random.nextInt(typerSpeed);
                         Message message = Message.obtain();
                         message.what = SHOWING;
