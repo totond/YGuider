@@ -27,8 +27,8 @@ public class MainActivity extends Activity implements View.OnClickListener{
     private void initGuider() {
         mYGuider = new YGuider(this);
         mYGuider.addNextHighlight(new RectF(100,100,200,200),"大家好，我是Hello，World",0,-0);
-        mYGuider.addNextHighlight(btn1,"asdfaSSSSSSSSSSSSSSSSSSweqes",0,-200);
-        mYGuider.addNextHighlight(btn2,"test2",0,-200);
+        mYGuider.addNextHighlight(btn1,"asdfaSSSSSSSSSSSSSSSSSSweqesasdasdasdasdasdasdas",0,-200);
+        mYGuider.addNextHighlight(btn2,"testsadasdasd2aadaafasdfsdfsq",0,130);
         mYGuider.prepareTarget();
     }
 

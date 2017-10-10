@@ -1,6 +1,8 @@
 package com.yanzhikai.guiderview.Views;
 
 import android.content.Context;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -21,7 +23,8 @@ public class GuidePopupWindow extends PopupWindow {
     private TyperTextView mTyperTextView;
     private TextView tv_jump, tv_next;
     private OnWindowClickListener mOnWindowClickListener;
-    private View mContentView;
+    private @LayoutRes int mContentId = R.layout.tips_window_layout;
+    private int mWidth = 400, mHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
 
     public GuidePopupWindow(Context context) {
         super(context);
@@ -30,35 +33,41 @@ public class GuidePopupWindow extends PopupWindow {
 
     private void init(Context context){
         mContext = context;
-        mContentView = LayoutInflater.from(context).inflate(R.layout.tips_window_layout,null);
-        setContentView(mContentView);
-        setWidth(ViewGroup.LayoutParams.WRAP_CONTENT);
-        setHeight(ViewGroup.LayoutParams.WRAP_CONTENT);
-//        setWidth(300);
-//        setHeight(200);
+        View contentView = LayoutInflater.from(context).inflate(mContentId,null);
+        setContentView(contentView);
+        resetWidthAndHeight();
 
 
-        mTyperTextView = (TyperTextView) mContentView.findViewById(R.id.ttv_tips);
-        tv_jump = (TextView) mContentView.findViewById(R.id.tv_jump);
-        tv_jump.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnWindowClickListener != null){
-                    mOnWindowClickListener.onJumpClick();
+        mTyperTextView = (TyperTextView) contentView.findViewById(R.id.ttv_tips);
+        tv_jump = (TextView) contentView.findViewById(R.id.tv_jump);
+        if (tv_jump != null) {
+            tv_jump.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnWindowClickListener != null) {
+                        mOnWindowClickListener.onJumpClick();
+                    }
                 }
-            }
-        });
-        tv_next = (TextView) mContentView.findViewById(R.id.tv_next);
-        tv_next.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mOnWindowClickListener != null){
-                    mOnWindowClickListener.onNextClick();
+            });
+        }
+        tv_next = (TextView) contentView.findViewById(R.id.tv_next);
+        if (tv_next != null) {
+            tv_next.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnWindowClickListener != null) {
+                        mOnWindowClickListener.onNextClick();
+                    }
                 }
-            }
-        });
+            });
+        }
 
 
+    }
+
+    public void resetWidthAndHeight(){
+        setWidth(mWidth);
+        setHeight(mHeight);
     }
 
     public void setContentBackgroundId(int id){
@@ -66,8 +75,6 @@ public class GuidePopupWindow extends PopupWindow {
     }
 
     public void showAsScannerTop(ScannerView view, int offsetX, int offsetY){
-//        showAsDropDown(view, offsetX,(int)-(0));
-//        showAsDropDown(view,0,0,Gravity.LEFT);
         int[] location = {0,0};
         view.getLocationOnScreen(location);
         showAtLocation((View) view.getParent()
@@ -77,7 +84,17 @@ public class GuidePopupWindow extends PopupWindow {
         Log.d("window", "showAsScannerTop: " + getContentView().getWidth());
     }
 
+    public void setTyperTextSize(int size){
+        if (mTyperTextView != null){
+            mTyperTextView.setTextSize(size);
+        }
+    }
 
+    public void setTyperSpeed(int speed){
+        if (mTyperTextView != null){
+            mTyperTextView.setTyperSpeed(speed);
+        }
+    }
 
     public void showGuideText(String text, int speed){
 //        mTyperTextView.setTyperSpeed(speed);

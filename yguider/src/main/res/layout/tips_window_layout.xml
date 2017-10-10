@@ -2,47 +2,71 @@
 <android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:background="@drawable/dialog_shape">
-    <com.yanzhikai.guiderview.Views.TyperTextView
-        android:layout_width="wrap_content"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_marginBottom="100dp">
+    <RelativeLayout
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:id="@+id/ttv_tips"
-        android:text="asdfafasdfafaasdasdasdas"
-        android:textSize="22sp"
-        android:paddingLeft="10dp"
-        android:paddingRight="30dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginBottom="10dp"
+        android:layout_marginTop="4dp"
+        android:gravity="top"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginLeft="8dp"
+        app:layout_constraintHorizontal_bias="0.0"
+        android:layout_marginStart="8dp"
+        app:layout_constraintRight_toLeftOf="@+id/tv_jump"
+        android:layout_marginRight="8dp" >
+    <com.yanzhikai.guiderview.Views.TyperTextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/ttv_tips"
+        android:text="sdas"
+        android:textSize="18sp"
+        android:paddingBottom="4dp"
         />
+    </RelativeLayout>
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:id="@+id/center"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_marginTop="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp" />
 
-    <TextView
-        android:id="@+id/tv_jump"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_jump"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textColor="@drawable/jump_next_text_color_selector"
-        android:textSize="16sp"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="10dp"
-        app:layout_constraintBottom_toTopOf="@+id/ttv_tips"
-        app:layout_constraintRight_toRightOf="parent" />
+        <TextView
+            android:id="@+id/tv_jump"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_jump"
+            app:layout_constraintTop_toTopOf="parent"
+            android:textColor="@drawable/jump_next_text_color_selector"
+            android:textSize="14sp"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="8dp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@+id/center" />
 
-    <TextView
-        android:id="@+id/tv_next"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/text_next"
-        android:textColor="@drawable/jump_next_text_color_selector"
-        android:textSize="16sp"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ttv_tips"
-        android:layout_marginRight="10dp"
-        android:layout_marginBottom="10dp" />
+
+
+        <TextView
+            android:id="@+id/tv_next"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/text_next"
+            android:textColor="@drawable/jump_next_text_color_selector"
+            android:textSize="14sp"
+            android:layout_marginRight="8dp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginBottom="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/center" />
+
+
 </android.support.constraint.ConstraintLayout>

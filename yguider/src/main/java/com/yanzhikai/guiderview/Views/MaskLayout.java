@@ -14,7 +14,6 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.RelativeLayout;
 
 import com.yanzhikai.guiderview.R;
@@ -165,12 +164,16 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 //                return false;
 //
 //        }
+        return false;
+    }
+
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        super.onTouchEvent(event);
         return true;
     }
 
-
-
-//    @Override
+    //    @Override
 //    protected void onLayout(boolean changed, int l, int t, int r, int b) {
 //        super.onLayout(changed,l,t,r,b);
 //        for (int i = 0; i < getChildCount(); i++) {
@@ -402,7 +405,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
         reset();
 
-        mYGuider.setIsGuiding(false);
+        mYGuider.setIsPreparing(false);
         ViewGroup parent = (ViewGroup)getParent();
         parent.removeView(this);
         mGuidePopupWindow.dismiss();

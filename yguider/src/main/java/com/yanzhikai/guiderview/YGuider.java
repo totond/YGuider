@@ -3,7 +3,6 @@ package com.yanzhikai.guiderview;
 import android.app.Activity;
 import android.graphics.RectF;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -29,7 +28,7 @@ public class YGuider {
     private ArrayList<RectF> mScanRegions;
     private ArrayList<ScanTarget> mScanTargets;
     private int mContentLocationX = 0, mContentLocationY = 0;
-    private boolean mIsGuiding = false;
+    private boolean mIsPreparing = false;
 
     public YGuider(Activity activity){
         mActivity = activity;
@@ -57,35 +56,18 @@ public class YGuider {
     }
 
     public void startGuide(){
-        if (!mIsGuiding) {
+        if (!mIsPreparing) {
 //            if (mMask != null) {
 //                buildMask();
 //            }
-            mIsGuiding = true;
+            mIsPreparing = true;
             mContentView.addView(mMask);
         }
 
     }
 
     public void addNextHighlight(View itemView, String text, int wOffsetX, int wOffsetY){
-//        final ViewTreeObserver observer = itemView.getViewTreeObserver();
-//        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-//            @Override
-//            public void onGlobalLayout() {
-//                itemView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-//                int[] viewLocation = {0,0};
-//                itemView.getLocationOnScreen(viewLocation);
-//                Log.d(TAG, "addNextHighlight: viewLocation0:  " + viewLocation[0]);
-//                Log.d(TAG, "addNextHighlight: viewLocation1:  " + viewLocation[1]);
-//                RectF region = new RectF(
-//                        viewLocation[0],viewLocation[1]
-//                        ,viewLocation[0] + itemView.getWidth()
-//                        ,viewLocation[1] + itemView.getHeight());
-//                addNextHighlight(region);
-//
-//
-//            }
-//        });
+
         ScanTarget scanTarget = new ScanTarget(itemView,text,wOffsetX,wOffsetY);
         mScanTargets.add(scanTarget);
 
@@ -126,7 +108,7 @@ public class YGuider {
                     }
                     scanTarget.getRegion().offset(-mContentLocationX,-mContentLocationY);
                     mScanRegions.add(scanTarget.getRegion());
-//                    mIsGuiding = false;
+//                    mIsPreparing = false;
                 }
             }
         });
@@ -134,17 +116,17 @@ public class YGuider {
     }
 
     public void cancelGuide(){
-        if (mIsGuiding) {
+        if (mIsPreparing) {
             mMask.exit();
         }
     }
 
-    public void setIsGuiding(boolean isGuiding) {
-        mIsGuiding = isGuiding;
+    public void setIsPreparing(boolean isPreparing) {
+        mIsPreparing = isPreparing;
     }
 
-    protected boolean getIsGuiding(){
-        return mIsGuiding;
+    public boolean getIsPreparing(){
+        return mIsPreparing;
     }
 
     public void setOnGuiderClickListener(OnGuiderClickListener guiderClickListener){
