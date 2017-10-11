@@ -1,4 +1,4 @@
-package com.yanzhikai.guiderview.Views;
+package com.yanzhikai.guiderview.views;
 
 import android.content.Context;
 import android.graphics.Canvas;
@@ -10,7 +10,6 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import java.lang.annotation.Retention;
@@ -55,7 +54,6 @@ public class ScannerView extends View {
 
     private void init() {
         initPaint();
-//        setBackgroundColor(Color.BLUE);
     }
 
 
@@ -105,7 +103,6 @@ public class ScannerView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
         int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-        Log.d("yguiderview", "onMeasure: child heightSize" + heightSize);
         setMeasuredDimension(widthSize,heightSize);
         super.onMeasure(widthMeasureSpec,heightMeasureSpec);
     }
@@ -113,13 +110,10 @@ public class ScannerView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
-        Log.d("yguiderview", "onMeasure: child width" + getHeight());
-        Log.d("yguiderview", "onMeasure: child measureheigh" + getMeasuredHeight());
     }
 
     @Override
     protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
-        Log.d("Scanner", "onLayout: ");
         super.onLayout(changed, left, top, right, bottom);
     }
 

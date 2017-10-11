@@ -17,7 +17,7 @@
         android:layout_marginStart="8dp"
         app:layout_constraintRight_toLeftOf="@+id/tv_jump"
         android:layout_marginRight="8dp" >
-    <com.yanzhikai.guiderview.Views.TyperTextView
+    <com.yanzhikai.guiderview.views.TyperTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ttv_tips"

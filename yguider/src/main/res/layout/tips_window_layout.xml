@@ -17,7 +17,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="8dp"
         android:id="@+id/relativeLayout">
-    <com.yanzhikai.guiderview.Views.TyperTextView
+    <com.yanzhikai.guiderview.views.TyperTextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:id="@+id/ttv_tips"

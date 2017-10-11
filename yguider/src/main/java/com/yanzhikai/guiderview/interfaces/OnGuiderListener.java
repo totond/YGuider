@@ -16,6 +16,11 @@ public class OnGuiderListener implements OnGuiderChangedListener,OnGuiderClickLi
     }
 
     @Override
+    public void onTargetClick(int index) {
+
+    }
+
+    @Override
     public void onJumpClick() {
 
     }
@@ -34,8 +39,6 @@ public class OnGuiderListener implements OnGuiderChangedListener,OnGuiderClickLi
     public void onGuiderFinished() {
 
     }
-
-
 
 
 }

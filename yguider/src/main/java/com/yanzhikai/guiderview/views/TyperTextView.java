@@ -1,4 +1,4 @@
-package com.yanzhikai.guiderview.Views;
+package com.yanzhikai.guiderview.views;
 
 import android.content.Context;
 import android.content.res.TypedArray;

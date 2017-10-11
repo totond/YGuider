@@ -1,9 +1,10 @@
 package com.yanzhikai.guiderview;
 
 import android.app.Activity;
+import android.graphics.Paint;
 import android.graphics.RectF;
+import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
-import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -11,7 +12,7 @@ import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 
-import com.yanzhikai.guiderview.Views.MaskLayout;
+import com.yanzhikai.guiderview.views.MaskLayout;
 import com.yanzhikai.guiderview.beans.ScanTarget;
 import com.yanzhikai.guiderview.interfaces.OnGuiderClickListener;
 import com.yanzhikai.guiderview.interfaces.OnGuiderListener;
@@ -165,6 +166,14 @@ public class YGuider {
         if (mIsPreparing) {
             mMask.exit();
         }
+    }
+
+    public void setMaskColor(@ColorInt int color){
+        mMask.setMackColor(color);
+    }
+
+    public void setMaskPaint(Paint paint){
+        mMask.setsPaint(paint);
     }
 
     public void setWindowTyperSpeed(int speed){
