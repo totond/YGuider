@@ -11,7 +11,7 @@ public class OnGuiderListener implements OnGuiderChangedListener,OnGuiderClickLi
     }
 
     @Override
-    public void onNextClick() {
+    public void onNextClick(int nextIndex) {
 
     }
 
@@ -26,7 +26,7 @@ public class OnGuiderListener implements OnGuiderChangedListener,OnGuiderClickLi
     }
 
     @Override
-    public void onGuiderNext() {
+    public void onGuiderNext(int nextIndex) {
 
     }
 

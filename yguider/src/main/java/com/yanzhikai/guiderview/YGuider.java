@@ -2,6 +2,9 @@ package com.yanzhikai.guiderview;
 
 import android.app.Activity;
 import android.graphics.RectF;
+import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
+import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -29,6 +32,10 @@ public class YGuider {
     private ArrayList<ScanTarget> mScanTargets;
     private int mContentLocationX = 0, mContentLocationY = 0;
     private boolean mIsPreparing = false;
+    /*
+     * 下面是PopupWindow相关属性
+     */
+    private String defaultJumpText,defaultNextText;
 
     public YGuider(Activity activity){
         mActivity = activity;
@@ -37,12 +44,14 @@ public class YGuider {
 
     private void init(){
         FrameLayout decorView = (FrameLayout)mActivity.getWindow().getDecorView();
-//        LinearLayout linearLayout1 = (LinearLayout) decorView.findViewById(com.android.internal.R.id.content);
         LinearLayout linearLayout = (LinearLayout) decorView.getChildAt(0);
         mContentView = (FrameLayout) linearLayout.getChildAt(1);
 
         mScanRegions = new ArrayList<>();
         mScanTargets = new ArrayList<>();
+
+        defaultJumpText = mActivity.getResources().getString(R.string.text_jump);
+        defaultNextText = mActivity.getResources().getString(R.string.text_next);
 
         buildMask();
 
@@ -57,9 +66,6 @@ public class YGuider {
 
     public void startGuide(){
         if (!mIsPreparing) {
-//            if (mMask != null) {
-//                buildMask();
-//            }
             mIsPreparing = true;
             mContentView.addView(mMask);
         }
@@ -67,14 +73,45 @@ public class YGuider {
     }
 
     public void addNextHighlight(View itemView, String text, int wOffsetX, int wOffsetY){
-
         ScanTarget scanTarget = new ScanTarget(itemView,text,wOffsetX,wOffsetY);
         mScanTargets.add(scanTarget);
 
     }
 
+    public void addNextHighlight(View itemView, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight){
+        ScanTarget scanTarget = new ScanTarget(itemView,text,wOffsetX,wOffsetY);
+        scanTarget.setWindowWidth(wWidth);
+        scanTarget.setWindowHeight(wHeight);
+        mScanTargets.add(scanTarget);
+    }
+
+    public void addNextHighlight(View itemView, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight, String jumpText, String nextText){
+        ScanTarget scanTarget = new ScanTarget(itemView,text,wOffsetX,wOffsetY);
+        scanTarget.setWindowWidth(wWidth);
+        scanTarget.setWindowHeight(wHeight);
+        scanTarget.setJumpText(jumpText);
+        scanTarget.setNextText(nextText);
+        mScanTargets.add(scanTarget);
+    }
+
     public void addNextHighlight(RectF highlightRegion, String text, int wOffsetX, int wOffsetY){
         ScanTarget scanTarget = new ScanTarget(highlightRegion,text,wOffsetX,wOffsetY);
+        mScanTargets.add(scanTarget);
+    }
+
+    public void addNextHighlight(RectF highlightRegion, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight){
+        ScanTarget scanTarget = new ScanTarget(highlightRegion,text,wOffsetX,wOffsetY);
+        scanTarget.setWindowWidth(wWidth);
+        scanTarget.setWindowHeight(wHeight);
+        mScanTargets.add(scanTarget);
+    }
+
+    public void addNextHighlight(RectF highlightRegion, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight, String jumpText, String nextText){
+        ScanTarget scanTarget = new ScanTarget(highlightRegion,text,wOffsetX,wOffsetY);
+        scanTarget.setWindowWidth(wWidth);
+        scanTarget.setWindowHeight(wHeight);
+        scanTarget.setJumpText(jumpText);
+        scanTarget.setNextText(nextText);
         mScanTargets.add(scanTarget);
     }
 
@@ -87,7 +124,7 @@ public class YGuider {
     }
 
     public void prepareTarget(){
-        final ViewTreeObserver observerD = mContentView.getViewTreeObserver();
+        ViewTreeObserver observerD = mContentView.getViewTreeObserver();
         observerD.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @Override
             public void onGlobalLayout() {
@@ -106,10 +143,19 @@ public class YGuider {
                                 ,location[1] + view.getHeight())
                         );
                     }
+                    //迁移区域
                     scanTarget.getRegion().offset(-mContentLocationX,-mContentLocationY);
                     mScanRegions.add(scanTarget.getRegion());
 //                    mIsPreparing = false;
+
+                    if (scanTarget.getJumpText() == null){
+                        scanTarget.setJumpText(defaultJumpText);
+                    }
+                    if (scanTarget.getNextText() == null){
+                        scanTarget.setNextText(defaultNextText);
+                    }
                 }
+
             }
         });
 
@@ -119,6 +165,38 @@ public class YGuider {
         if (mIsPreparing) {
             mMask.exit();
         }
+    }
+
+    public void setWindowTyperSpeed(int speed){
+        mMask.getWindow().setTyperSpeed(speed);
+    }
+
+    public void setWindowTyperTextSize(int size){
+        mMask.getWindow().setTyperTextSize(size);
+    }
+
+    public void setWindowTyperIncrease(int increase){
+        mMask.getWindow().setTyperIncrease(increase);
+    }
+
+    public void setJumpText(String jumpText) {
+        defaultJumpText = jumpText;
+    }
+
+    public void setNextText(String nextText) {
+        defaultNextText = nextText;
+    }
+
+    public void setWindowBackground(@DrawableRes int idRes){
+        mMask.getWindow().setContentBackgroundId(idRes);
+    }
+
+    public void setWindowJumpAndNextTextSize(int size){
+        mMask.getWindow().setTvSize(size);
+    }
+
+    public void setWindowContent(@LayoutRes int layouId){
+        mMask.getWindow().setContent(layouId);
     }
 
     public void setIsPreparing(boolean isPreparing) {

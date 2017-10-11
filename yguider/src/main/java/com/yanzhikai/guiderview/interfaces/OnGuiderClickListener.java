@@ -6,6 +6,6 @@ package com.yanzhikai.guiderview.interfaces;
 
 public interface OnGuiderClickListener {
     void onMaskClick();
-    void onNextClick();
+    void onNextClick(int nextIndex);
     void onJumpClick();
 }

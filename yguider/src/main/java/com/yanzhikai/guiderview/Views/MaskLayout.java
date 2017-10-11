@@ -17,7 +17,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.yanzhikai.guiderview.R;
-import com.yanzhikai.guiderview.RegionEvaluator;
+import com.yanzhikai.guiderview.tools.RegionEvaluator;
 import com.yanzhikai.guiderview.beans.ScanTarget;
 import com.yanzhikai.guiderview.YGuider;
 import com.yanzhikai.guiderview.interfaces.OnGuiderChangedListener;
@@ -222,38 +222,36 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     private void drawScannerLine(Canvas canvas, ScannerView view){
         float y = view.getY() + view.getHeight()/2;
         float x = view.getX() + view.getWidth()/2;
-        switch (view.getState()) {
-            case ScannerView.MOVING:
-                Log.d(TAG, "drawScannerLine: MOVING");
-//                canvas.drawLine(0, y, canvas.getWidth(), y, view.getsPaint());
-//                canvas.drawLine(x, 0, x, canvas.getHeight(), view.getsPaint());
-                canvas.drawRect(view.getLeft(),view.getTop(),view.getRight(),view.getBottom(),view.getsPaint());
-                canvas.drawLine(0,y,view.getLeft(),y,view.getsPaint());
-                canvas.drawLine(view.getRight(),y,canvas.getWidth(),y,view.getsPaint());
-                canvas.drawLine(x,0,x,view.getTop(),view.getsPaint());
-                canvas.drawLine(x,view.getBottom(),x,canvas.getHeight(),view.getsPaint());
-                break;
-            case ScannerView.EXPANDING:
-                Log.d(TAG, "drawScannerLine: EXPANDING" + view.getSLeft());
-//                canvas.drawRect(view.getSLeft(),view.getSTop(),view.getSRight(),view.getSBottom(),view.getsPaint());
-//                canvas.drawLine(0,y,view.getSLeft(),y,view.getsPaint());
-//                canvas.drawLine(view.getSRight(),y,canvas.getWidth(),y,view.getsPaint());
-//                canvas.drawLine(x,0,x,view.getSTop(),view.getsPaint());
-//                canvas.drawLine(x,view.getSBottom(),x,canvas.getHeight(),view.getsPaint());
-                canvas.drawRect(view.getLeft(),view.getTop(),view.getRight(),view.getBottom(),view.getsPaint());
-                canvas.drawLine(0,y,view.getLeft(),y,view.getsPaint());
-                canvas.drawLine(view.getRight(),y,canvas.getWidth(),y,view.getsPaint());
-                canvas.drawLine(x,0,x,view.getTop(),view.getsPaint());
-                canvas.drawLine(x,view.getBottom(),x,canvas.getHeight(),view.getsPaint());
-                break;
 
-        }
+        canvas.drawRect(view.getLeft(),view.getTop(),view.getRight(),view.getBottom(),view.getsPaint());
+        canvas.drawLine(0,y,view.getLeft(),y,view.getsPaint());
+        canvas.drawLine(view.getRight(),y,canvas.getWidth(),y,view.getsPaint());
+        canvas.drawLine(x,0,x,view.getTop(),view.getsPaint());
+        canvas.drawLine(x,view.getBottom(),x,canvas.getHeight(),view.getsPaint());
+
+//        switch (view.getState()) {
+//            case ScannerView.MOVING:
+//                Log.d(TAG, "drawScannerLine: MOVING");
+//                canvas.drawRect(view.getLeft(),view.getTop(),view.getRight(),view.getBottom(),view.getsPaint());
+//                canvas.drawLine(0,y,view.getLeft(),y,view.getsPaint());
+//                canvas.drawLine(view.getRight(),y,canvas.getWidth(),y,view.getsPaint());
+//                canvas.drawLine(x,0,x,view.getTop(),view.getsPaint());
+//                canvas.drawLine(x,view.getBottom(),x,canvas.getHeight(),view.getsPaint());
+//                break;
+//            case ScannerView.EXPANDING:
+//                Log.d(TAG, "drawScannerLine: EXPANDING" + view.getSLeft());
+//                canvas.drawRect(view.getLeft(),view.getTop(),view.getRight(),view.getBottom(),view.getsPaint());
+//                canvas.drawLine(0,y,view.getLeft(),y,view.getsPaint());
+//                canvas.drawLine(view.getRight(),y,canvas.getWidth(),y,view.getsPaint());
+//                canvas.drawLine(x,0,x,view.getTop(),view.getsPaint());
+//                canvas.drawLine(x,view.getBottom(),x,canvas.getHeight(),view.getsPaint());
+//                break;
+//        }
 
     }
 
     @Override
     public void onClick(View v) {
-        Log.d("guiderview", "onClick: ");
 //        onNext();
 
         if (mClickListener != null){
@@ -264,7 +262,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     public void onNext(){
         if (scanIndex < mScanTargets.size()) {
             if ((mChangedListener != null)){
-                mChangedListener.onGuiderNext();
+                mChangedListener.onGuiderNext(scanIndex);
             }
             setAnimator(mScannerList.get(0)
                     , mScanTargets.get(scanIndex).getRegion());
@@ -284,15 +282,6 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
         ObjectAnimator moveRAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLastRegion(),getCenterRectF(toRegion));
 
-        Log.d(TAG, "onMeasure: " + mScannerList.get(0).getWidth());
-//        ObjectAnimator objectAnimatorTop = ObjectAnimator.ofFloat(scannerView,"sTop"
-//                ,scannerView.getSTop(),scannerView.getsRegion().top);
-//        ObjectAnimator objectAnimatorLeft = ObjectAnimator.ofFloat(scannerView,"sLeft"
-//                ,scannerView.getSLeft(),scannerView.getsRegion().left);
-//        ObjectAnimator objectAnimatorBottom = ObjectAnimator.ofFloat(scannerView,"sBottom"
-//                ,scannerView.getSBottom(),scannerView.getsRegion().bottom);
-//        ObjectAnimator objectAnimatorRight = ObjectAnimator.ofFloat(scannerView,"sRight"
-//                ,scannerView.getSRight(),scannerView.getsRegion().right);
 
         ObjectAnimator LRAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLayoutRegion(),scannerView.getsRegion());
 
@@ -344,17 +333,8 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
             @Override
             public void onAnimationEnd(Animator animation) {
                 isMoving = false;
-//                scannerView.setState(ScannerView.STAY_EXPANDED);
                 setClickable(true);
-//                mGuidePopupWindow.showAtLocation(MaskLayout.this, Gravity.CENTER,0,0);
-//                mGuidePopupWindow.showAsDropDown(mScannerList.get(0),0,0);
-
-                Log.d(TAG, "onAnimationEnd: " + scannerView.getLayoutRegion().toString());
-                mGuidePopupWindow.showAsDropDown(
-                        mScannerList.get(0)
-                        ,mScanTargets.get(scanIndex).getwOffsetX()
-                        ,mScanTargets.get(scanIndex).getwOffsetY());
-                mGuidePopupWindow.showGuideText(mScanTargets.get(scanIndex).getShowText(),0);
+                showWindow();
                 scanIndex ++;
             }
 
@@ -371,6 +351,19 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         doAnimator.start();
     }
 
+    private void showWindow(){
+        ScanTarget scanTarget = mScanTargets.get(scanIndex);
+        mGuidePopupWindow.setWidth(scanTarget.getWindowWidth());
+        mGuidePopupWindow.setHeight(scanTarget.getWindowHeight());
+        mGuidePopupWindow.setNextText(scanTarget.getNextText());
+        mGuidePopupWindow.setJumpText(scanTarget.getJumpText());
+        mGuidePopupWindow.showAsDropDown(
+                mScannerList.get(0)
+                ,mScanTargets.get(scanIndex).getwOffsetX()
+                ,mScanTargets.get(scanIndex).getwOffsetY());
+        mGuidePopupWindow.showGuideText(scanTarget.getShowText(),0);
+    }
+
     public void setScanTargets(ArrayList<ScanTarget> scanTargets){
         mScanTargets = scanTargets;
     }
@@ -385,14 +378,18 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
     public void setOnGuiderListener(OnGuiderListener onGuiderListener){
         mChangedListener = onGuiderListener;
-        mChangedListener = onGuiderListener;
+        mClickListener = onGuiderListener;
 
+    }
+
+    public GuidePopupWindow getWindow(){
+        return mGuidePopupWindow;
     }
 
     @Override
     public void onNextClick() {
         if (mClickListener != null){
-            mClickListener.onNextClick();
+            mClickListener.onNextClick(scanIndex);
         }
         onNext();
     }

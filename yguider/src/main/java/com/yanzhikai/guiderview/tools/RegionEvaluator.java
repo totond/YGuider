@@ -1,4 +1,4 @@
-package com.yanzhikai.guiderview;
+package com.yanzhikai.guiderview.tools;
 
 import android.animation.TypeEvaluator;
 import android.graphics.RectF;
@@ -19,7 +19,6 @@ public class RegionEvaluator implements TypeEvaluator {
         float dt = fraction * (endRegion.top - startRegion.top) + startRegion.top;
         float dr = fraction * (endRegion.right - startRegion.right) + startRegion.right;
         float db = fraction * (endRegion.bottom - startRegion.bottom) + startRegion.bottom;
-        Log.d("evaluate", "evaluate: left" + dl);
         return new RectF(dl,dt,dr,db);
     }
 }

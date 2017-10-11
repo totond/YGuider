@@ -6,6 +6,6 @@ package com.yanzhikai.guiderview.interfaces;
 
 public interface OnGuiderChangedListener {
     void onGuiderStart();
-    void onGuiderNext();
+    void onGuiderNext(int nextIndex);
     void onGuiderFinished();
 }

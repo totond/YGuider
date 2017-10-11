@@ -2,6 +2,7 @@ package com.yanzhikai.guiderview.beans;
 
 import android.graphics.RectF;
 import android.view.View;
+import android.view.ViewGroup;
 
 /**
  * Created by Administrator on 2017/9/28 0028.
@@ -10,9 +11,10 @@ import android.view.View;
 public class ScanTarget {
     private View mTargetView;
     private RectF mRegion;
-    private String mShowText;
+    private String mShowText, mJumpText, mNextText;
     private int mMoveDuration = 500, mScaleDuration = 500;
     private boolean mIsRegion = false;
+    private int mWindowWidth = 300, mWindowHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int wOffsetX = 0, wOffsetY = 0;
 
     public ScanTarget(View targetView, String text, int wOffsetX, int wOffsetY){
@@ -47,16 +49,20 @@ public class ScanTarget {
         init();
     }
 
-    public String getShowText() {
-        return mShowText;
+    public void setJumpText(String jumpText) {
+        this.mJumpText = jumpText;
     }
 
-    public int getwOffsetX() {
-        return wOffsetX;
+    public void setNextText(String nextText) {
+        this.mNextText = nextText;
     }
 
-    public int getwOffsetY() {
-        return wOffsetY;
+    public void setWindowWidth(int windowWidth) {
+        this.mWindowWidth = windowWidth;
+    }
+
+    public void setWindowHeight(int windowHeight) {
+        this.mWindowHeight = windowHeight;
     }
 
     public void setMoveDuration(int mMoveDuration) {
@@ -65,6 +71,34 @@ public class ScanTarget {
 
     public void setScaleDuration(int mScaleDuration) {
         this.mScaleDuration = mScaleDuration;
+    }
+
+    public int getWindowWidth() {
+        return mWindowWidth;
+    }
+
+    public int getWindowHeight() {
+        return mWindowHeight;
+    }
+
+    public String getJumpText() {
+        return mJumpText;
+    }
+
+    public String getNextText() {
+        return mNextText;
+    }
+
+    public int getwOffsetX() {
+        return wOffsetX;
+    }
+
+    public String getShowText() {
+        return mShowText;
+    }
+
+    public int getwOffsetY() {
+        return wOffsetY;
     }
 
     public int getMoveDuration() {
