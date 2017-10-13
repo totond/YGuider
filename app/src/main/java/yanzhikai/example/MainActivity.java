@@ -35,7 +35,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
 
     private void initGuider() {
         mYGuider = new YGuideBuilder(this)
-                .addNextHighlight(new RectF(100, 100, 200, 200), "点击这里可以立刻出现所有提示文字,大家好，我是YGuider！", 90, 0)
+                .addNextHighlight(new RectF(100, 100, 200, 200), "点击这里可以立刻出现所有提示文字，大家好，我是YGuider！", 90, 0)
                 .addNextHighlight(btn1, "这里是根据传入View来确定的区域!", 150, 10)
                 .addNextHighlight(new RectF(50, 500, 150, 650), "这里是根据传入矩形区域坐标来确定的！", 100, 10)
                 .addNextHighlight(
@@ -49,8 +49,7 @@ public class MainActivity extends Activity implements View.OnClickListener {
                         , "", "Finish")
                 .build();
 
-
-//        mYGuider = new YGuider(this);
+        mYGuider.setMaskRefreshTime(50);
 //        mYGuider.setWindowContent(R.layout.tips_window_layout_test);
 //        mYGuider.setWindowTyperTextSize(10);
 //        mYGuider.setWindowJumpAndNextTextSize(8);

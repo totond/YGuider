@@ -143,6 +143,8 @@ public class GuidePopupWindow extends PopupWindow {
         }
     }
 
+
+
     public void setOnWindowClickListener(OnWindowClickListener mOnWindowClickListener) {
         this.mOnWindowClickListener = mOnWindowClickListener;
     }

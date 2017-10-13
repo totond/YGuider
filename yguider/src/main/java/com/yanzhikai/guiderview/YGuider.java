@@ -168,6 +168,10 @@ public class YGuider {
         }
     }
 
+    public void setMaskRefreshTime(int refreshTime){
+        mMask.setRefreshTime(refreshTime);
+    }
+
     public void setMaskColor(@ColorInt int color){
         mMask.setMackColor(color);
     }

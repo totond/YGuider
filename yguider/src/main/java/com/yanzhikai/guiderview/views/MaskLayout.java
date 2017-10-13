@@ -43,6 +43,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     private OnGuiderClickListener mClickListener;
     private GuidePopupWindow mGuidePopupWindow;
     private OnGuiderChangedListener mChangedListener;
+    private int mRefreshTime = 20;
     private @ColorInt int mMaskColor;
 
 
@@ -97,7 +98,9 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         scannerView1.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
-                mClickListener.onTargetClick(scanIndex - 1);
+                if (mClickListener != null) {
+                    mClickListener.onTargetClick(scanIndex - 1);
+                }
             }
         });
         addView(scannerView1);
@@ -201,7 +204,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         }
 
         if (isMoving){
-            postInvalidateDelayed(20);
+            postInvalidateDelayed(mRefreshTime);
         }
 
     }
@@ -331,6 +334,14 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
                 ,mScanTargets.get(scanIndex).getwOffsetX()
                 ,mScanTargets.get(scanIndex).getwOffsetY());
         mGuidePopupWindow.showGuideText(scanTarget.getShowText());
+    }
+
+    public void setRefreshTime(int refreshTime) {
+        this.mRefreshTime = refreshTime;
+    }
+
+    public int getRefreshTime() {
+        return mRefreshTime;
     }
 
     public void setsPaint(Paint sPaint){

@@ -23,7 +23,6 @@
         android:id="@+id/ttv_tips"
         android:text="sdas"
         android:textSize="18sp"
-        android:paddingBottom="4dp"
         />
     </RelativeLayout>
         <View
