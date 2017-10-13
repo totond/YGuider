@@ -5,7 +5,7 @@ import android.graphics.RectF;
 import android.util.Log;
 
 /**
- * Created by Administrator on 2017/10/9 0009.
+ * 用于计算在属性动画里面的矩形数组变化
  */
 
 public class RegionEvaluator implements TypeEvaluator {

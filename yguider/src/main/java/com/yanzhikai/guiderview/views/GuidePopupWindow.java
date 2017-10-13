@@ -35,14 +35,17 @@ public class GuidePopupWindow extends PopupWindow {
         setContentView(contentView);
         resetWidthAndHeight();
 
-
         mTyperTextView = (TyperTextView) contentView.findViewById(R.id.ttv_tips);
-        mTyperTextView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mTyperTextView.showAll();
-            }
-        });
+        if (mTyperTextView != null) {
+            mTyperTextView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mTyperTextView != null) {
+                        mTyperTextView.showAll();
+                    }
+                }
+            });
+        }
         tv_jump = (TextView) contentView.findViewById(R.id.tv_jump);
         if (tv_jump != null) {
             tv_jump.setOnClickListener(new View.OnClickListener() {
@@ -98,20 +101,28 @@ public class GuidePopupWindow extends PopupWindow {
 //    }
 
     public void setJumpText(String text) {
-        tv_jump.setText(text);
+        if (tv_jump != null) {
+            tv_jump.setText(text);
+        }
     }
 
     public void setNextText(String text) {
-        tv_next.setText(text);
+        if (tv_next != null) {
+            tv_next.setText(text);
+        }
     }
 
     public void setTvSize(int size){
-        tv_jump.setTextSize(size);
-        tv_next.setTextSize(size);
+        if (tv_jump != null && tv_next != null) {
+            tv_jump.setTextSize(size);
+            tv_next.setTextSize(size);
+        }
     }
 
     public void setTyperIncrease(int increase){
-        mTyperTextView.setCharIncrease(increase);
+        if (mTyperTextView != null) {
+            mTyperTextView.setCharIncrease(increase);
+        }
     }
 
     public void setTyperTextSize(int size) {
@@ -126,10 +137,10 @@ public class GuidePopupWindow extends PopupWindow {
         }
     }
 
-    public void showGuideText(String text, int speed) {
-//        mTyperTextView.setTyperSpeed(speed);
-        mTyperTextView.animateText(text);
-//        mTyperTextView.setText(text);
+    public void showGuideText(String text) {
+        if (mTyperTextView != null) {
+            mTyperTextView.animateText(text);
+        }
     }
 
     public void setOnWindowClickListener(OnWindowClickListener mOnWindowClickListener) {

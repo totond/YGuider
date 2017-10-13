@@ -51,28 +51,7 @@ public class TyperTextView extends TextView {
         random = new Random();
         mText = getText();
         handler = new ShowHandler();
-//        handler = new Handler(new Handler.Callback() {
-//            @Override
-//            public boolean handleMessage(Message msg) {
-//                int currentLength = getText().length();
-//                if (currentLength < mText.length()) {
-//                    if (currentLength + charIncrease > mText.length()) {
-//                        charIncrease = mText.length() - currentLength;
-//                    }
-//                    append(mText.subSequence(currentLength, currentLength + charIncrease));
-//                    long randomTime = typerSpeed + random.nextInt(typerSpeed);
-//                    Message message = Message.obtain();
-//                    message.what = SHOWING;
-//                    handler.sendMessageDelayed(message, randomTime);
-//                    return false;
-//                } else {
-//                    if(animationListener != null) {
-//                        animationListener.onAnimationEnd(TyperTextView.this);
-//                    }
-//                }
-//                return false;
-//            }
-//        });
+
 
     }
 
@@ -108,7 +87,6 @@ public class TyperTextView extends TextView {
 
         mText = text;
         showingIncrease = charIncrease;
-        Log.d(TAG, "animateText: " + mText);
         setText("");
         Message message = Message.obtain();
         message.what = SHOWING;
@@ -124,7 +102,6 @@ public class TyperTextView extends TextView {
 
     @Override
     protected void onDetachedFromWindow() {
-        Log.d(TAG, "onDetachedFromWindow: ");
         super.onDetachedFromWindow();
         handler.removeCallbacksAndMessages(null);
     }
@@ -137,8 +114,6 @@ public class TyperTextView extends TextView {
             if (currentLength + showingIncrease > mText.length()) {
                 showingIncrease = mText.length() - currentLength;
             }
-            Log.d(TAG, "handleMessage: currentLength " + currentLength);
-            Log.d(TAG, "handleMessage: mText.length() " + mText.length());
             switch (msg.what){
                 case SHOWING:
                     if (currentLength < mText.length()) {

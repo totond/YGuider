@@ -79,6 +79,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         if (Build.VERSION.SDK_INT < 18){
             setLayerType(LAYER_TYPE_NONE,null);
         }
+        setLayerType(LAYER_TYPE_NONE,null);
     }
 
     private void initPaint() {
@@ -329,7 +330,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
                 mScannerList.get(0)
                 ,mScanTargets.get(scanIndex).getwOffsetX()
                 ,mScanTargets.get(scanIndex).getwOffsetY());
-        mGuidePopupWindow.showGuideText(scanTarget.getShowText(),0);
+        mGuidePopupWindow.showGuideText(scanTarget.getShowText());
     }
 
     public void setsPaint(Paint sPaint){
@@ -407,7 +408,5 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
         Log.d(TAG, "onDetachedFromWindow: ");
-//        mContext = null;
-//        mYGuider = null;
     }
 }
