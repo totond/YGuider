@@ -5,7 +5,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 /**
- * Created by Administrator on 2017/9/28 0028.
+ * 存储扫描目标信息的类
  */
 
 public class ScanTarget {
@@ -13,9 +13,9 @@ public class ScanTarget {
     private RectF mRegion;
     private String mShowText, mJumpText, mNextText;
     private int mMoveDuration = 500, mScaleDuration = 500;
-    private boolean mIsRegion = false;
     private int mWindowWidth = 300, mWindowHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
     private int wOffsetX = 0, wOffsetY = 0;
+    private boolean mIsRegion = false;
 
     public ScanTarget(View targetView, String text, int wOffsetX, int wOffsetY){
         mShowText = text;

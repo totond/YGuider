@@ -1,11 +1,13 @@
 package com.yanzhikai.guiderview;
 
 import android.app.Activity;
+import android.app.Fragment;
 import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
 import android.support.annotation.LayoutRes;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
@@ -20,7 +22,7 @@ import com.yanzhikai.guiderview.interfaces.OnGuiderListener;
 import java.util.ArrayList;
 
 /**
- * Created by Administrator on 2017/9/25 0025.
+ * 扫描框风格的新手引导
  */
 
 public class YGuider {
@@ -33,9 +35,7 @@ public class YGuider {
     private ArrayList<ScanTarget> mScanTargets;
     private int mContentLocationX = 0, mContentLocationY = 0;
     private boolean mIsPreparing = false;
-    /*
-     * 下面是PopupWindow相关属性
-     */
+    //PopupWindow相关属性
     private String defaultJumpText,defaultNextText;
 
     public YGuider(Activity activity){
@@ -44,9 +44,9 @@ public class YGuider {
     }
 
     private void init(){
+        //通过DecorView获取
         FrameLayout decorView = (FrameLayout)mActivity.getWindow().getDecorView();
-        LinearLayout linearLayout = (LinearLayout) decorView.getChildAt(0);
-        mContentView = (FrameLayout) linearLayout.getChildAt(1);
+        mContentView = (FrameLayout) decorView.findViewById(android.R.id.content);
 
         mScanRegions = new ArrayList<>();
         mScanTargets = new ArrayList<>();
@@ -73,12 +73,28 @@ public class YGuider {
 
     }
 
+    /**
+     * 增加一个扫描区域
+     * @param itemView 目标View
+     * @param text 说明文字
+     * @param wOffsetX 弹出窗口的X位置偏移量（初始位置为目标View中间）
+     * @param wOffsetY 弹出窗口的Y位置偏移量（初始位置为目标View正下方）
+     */
     public void addNextHighlight(View itemView, String text, int wOffsetX, int wOffsetY){
         ScanTarget scanTarget = new ScanTarget(itemView,text,wOffsetX,wOffsetY);
         mScanTargets.add(scanTarget);
 
     }
 
+    /**
+     * 增加一个扫描区域
+     * @param itemView 目标View
+     * @param text 说明文字
+     * @param wOffsetX 弹出窗口的X位置偏移量（初始位置为目标View中间）
+     * @param wOffsetY 弹出窗口的Y位置偏移量（初始位置为目标View正下方）
+     * @param wWidth 弹出窗口的宽度
+     * @param wHeight 弹出窗口的高度
+     */
     public void addNextHighlight(View itemView, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight){
         ScanTarget scanTarget = new ScanTarget(itemView,text,wOffsetX,wOffsetY);
         scanTarget.setWindowWidth(wWidth);
@@ -86,6 +102,17 @@ public class YGuider {
         mScanTargets.add(scanTarget);
     }
 
+    /**
+     * 增加一个扫描区域
+     * @param itemView 目标View
+     * @param text 说明文字
+     * @param wOffsetX 弹出窗口的X位置偏移量（初始位置为目标View中间）
+     * @param wOffsetY 弹出窗口的Y位置偏移量（初始位置为目标View正下方）
+     * @param wWidth 弹出窗口的宽度
+     * @param wHeight 弹出窗口的高度
+     * @param jumpText 跳过选项的文字
+     * @param nextText 下一步选项的文字
+     */
     public void addNextHighlight(View itemView, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight, String jumpText, String nextText){
         ScanTarget scanTarget = new ScanTarget(itemView,text,wOffsetX,wOffsetY);
         scanTarget.setWindowWidth(wWidth);
@@ -95,11 +122,27 @@ public class YGuider {
         mScanTargets.add(scanTarget);
     }
 
+    /**
+     * 增加一个扫描区域
+     * @param highlightRegion 目标区域的坐标矩阵
+     * @param text 说明文字
+     * @param wOffsetX 弹出窗口的X位置偏移量（初始位置为目标View中间）
+     * @param wOffsetY 弹出窗口的Y位置偏移量（初始位置为目标View正下方）
+     */
     public void addNextHighlight(RectF highlightRegion, String text, int wOffsetX, int wOffsetY){
         ScanTarget scanTarget = new ScanTarget(highlightRegion,text,wOffsetX,wOffsetY);
         mScanTargets.add(scanTarget);
     }
 
+    /**
+     * 增加一个扫描区域
+     * @param highlightRegion 目标区域的坐标矩阵
+     * @param text 说明文字
+     * @param wOffsetX 弹出窗口的X位置偏移量（初始位置为目标View中间）
+     * @param wOffsetY 弹出窗口的Y位置偏移量（初始位置为目标View正下方）
+     * @param wWidth 弹出窗口的宽度
+     * @param wHeight 弹出窗口的高度
+     */
     public void addNextHighlight(RectF highlightRegion, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight){
         ScanTarget scanTarget = new ScanTarget(highlightRegion,text,wOffsetX,wOffsetY);
         scanTarget.setWindowWidth(wWidth);
@@ -107,6 +150,17 @@ public class YGuider {
         mScanTargets.add(scanTarget);
     }
 
+    /**
+     * 增加一个扫描区域
+     * @param highlightRegion 目标区域的坐标矩阵
+     * @param text 说明文字
+     * @param wOffsetX 弹出窗口的X位置偏移量（初始位置为目标View中间）
+     * @param wOffsetY 弹出窗口的Y位置偏移量（初始位置为目标View正下方）
+     * @param wWidth 弹出窗口的宽度
+     * @param wHeight 弹出窗口的高度
+     * @param jumpText 跳过选项的文字
+     * @param nextText 下一步选项的文字
+     */
     public void addNextHighlight(RectF highlightRegion, String text, int wOffsetX, int wOffsetY, int wWidth, int wHeight, String jumpText, String nextText){
         ScanTarget scanTarget = new ScanTarget(highlightRegion,text,wOffsetX,wOffsetY);
         scanTarget.setWindowWidth(wWidth);
@@ -116,6 +170,7 @@ public class YGuider {
         mScanTargets.add(scanTarget);
     }
 
+    //获取ContentView在屏幕位置
     private void getContentLocation(){
         int[] contentLocation = {0,0};
         mContentView.getLocationOnScreen(contentLocation);
@@ -124,6 +179,7 @@ public class YGuider {
 
     }
 
+    //在View初始化宽高属性之后，获取它们的宽高信息，写入目标列表
     public void prepareTarget(){
         ViewTreeObserver observerD = mContentView.getViewTreeObserver();
         observerD.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
@@ -143,10 +199,11 @@ public class YGuider {
                                 ,location[0] + view.getWidth()
                                 ,location[1] + view.getHeight())
                         );
+                        //迁移区域.因为区域是以相对ContentView的坐标系定义的
+                        scanTarget.getRegion().offset(-mContentLocationX,-mContentLocationY);
+                        mScanRegions.add(scanTarget.getRegion());
                     }
-                    //迁移区域
-                    scanTarget.getRegion().offset(-mContentLocationX,-mContentLocationY);
-                    mScanRegions.add(scanTarget.getRegion());
+
 //                    mIsPreparing = false;
 
                     if (scanTarget.getJumpText() == null){
@@ -162,12 +219,17 @@ public class YGuider {
 
     }
 
+    //退出新手引导
     public void cancelGuide(){
         if (mIsPreparing) {
             mMask.exit();
         }
     }
 
+    /**
+     * 设置扫描框动画刷新的频率
+     * @param refreshTime 单位是ms
+     */
     public void setMaskRefreshTime(int refreshTime){
         mMask.setRefreshTime(refreshTime);
     }
@@ -180,14 +242,22 @@ public class YGuider {
         mMask.setsPaint(paint);
     }
 
-    public void setWindowTyperSpeed(int speed){
-        mMask.getWindow().setTyperSpeed(speed);
+    /**
+     * 设置弹窗里面TextView文字出现的速度
+     * @param refreshTime 每次增加文字的时间间隔
+     */
+    public void setWindowTyperRefreshTime(int refreshTime){
+        mMask.getWindow().setTyperRefreshTime(refreshTime);
     }
 
     public void setWindowTyperTextSize(int size){
         mMask.getWindow().setTyperTextSize(size);
     }
 
+    /**
+     * 设置弹窗里面TextView文字的增长速度
+     * @param increase 每次增加多少个字符
+     */
     public void setWindowTyperIncrease(int increase){
         mMask.getWindow().setTyperIncrease(increase);
     }

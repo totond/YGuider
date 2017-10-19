@@ -28,7 +28,7 @@ import com.yanzhikai.guiderview.interfaces.OnGuiderListener;
 import java.util.ArrayList;
 
 /**
- * Created by Administrator on 2017/9/25 0025.
+ * 用于覆盖Activity界面的遮罩
  */
 
 public class MaskLayout extends RelativeLayout implements View.OnClickListener,GuidePopupWindow.OnWindowClickListener {
@@ -38,7 +38,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     private Paint sPaint;
     private ArrayList<ScannerView> mScannerList;
     private ArrayList<ScanTarget> mScanTargets;
-    private boolean isMoving = false;
+    private boolean isDoingAnimation = false;
     private int scanIndex = 0;
     private OnGuiderClickListener mClickListener;
     private GuidePopupWindow mGuidePopupWindow;
@@ -61,7 +61,6 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         setWillNotDraw(false);
 
         mMaskColor = mContext.getResources().getColor(R.color.colorTransparency);
-//        mMaskColor = Color.argb(99,99,99,99);
 
         initPaint();
         initScanner();
@@ -106,11 +105,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         addView(scannerView1);
         mScannerList.add(scannerView1);
 
-//        ScannerView scannerView2 = new ScannerView(mContext);
-////        LayoutParams layoutParams2 = new LayoutParams(50,50);
-////        scannerView1.setLayoutParams(layoutParams2);
-//        addView(scannerView2);
-//        mScannerList.add(scannerView2);
+
     }
 
     @Override
@@ -125,47 +120,6 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         super.onLayout(changed, l, t, r, b);
     }
 
-    //    @Override
-//    protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
-//        Log.d(TAG, "onMeasure: ");
-//
-//        int widthMode = MeasureSpec.AT_MOST;
-//        int heightMode = MeasureSpec.AT_MOST;
-//        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
-//        int heightSize = MeasureSpec.getSize(heightMeasureSpec);
-//
-//        Log.d(TAG, "onMeasure: widthSize" + widthSize);
-//        for (int i = 0; i < getChildCount(); i++){
-//            View child = getChildAt(i);
-////            measureChild(
-////                    child
-////                    ,MeasureSpec.makeMeasureSpec(child.getLayoutParams().width, MeasureSpec.EXACTLY)
-////                    ,MeasureSpec.makeMeasureSpec(child.getLayoutParams().height, MeasureSpec.EXACTLY));
-//            child.measure(
-//                    MeasureSpec.makeMeasureSpec(child.getLayoutParams().width, MeasureSpec.EXACTLY)
-//                    ,MeasureSpec.makeMeasureSpec(child.getLayoutParams().height, MeasureSpec.EXACTLY));
-//        }
-//
-//        super.onMeasure(MeasureSpec.makeMeasureSpec(widthSize, widthMode), MeasureSpec.makeMeasureSpec(heightSize, heightMode));
-////        super.onMeasure(widthMeasureSpec,heightMeasureSpec);
-////        setMeasuredDimension(widthSize,heightSize);
-//
-//    }
-
-    @Override
-    public boolean onInterceptTouchEvent(MotionEvent ev) {
-//        switch (ev.getAction()) {
-//            case MotionEvent.ACTION_MOVE:
-//
-////                break;
-//            case MotionEvent.ACTION_UP:
-//                return true;
-//            case MotionEvent.ACTION_DOWN:
-//                return false;
-//
-//        }
-        return false;
-    }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -173,19 +127,6 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         return true;
     }
 
-    //    @Override
-//    protected void onLayout(boolean changed, int l, int t, int r, int b) {
-//        super.onLayout(changed,l,t,r,b);
-//        for (int i = 0; i < getChildCount(); i++) {
-//            ScannerView child = (ScannerView) getChildAt(i);
-////            LayoutParams layoutParams = child.getLayoutParams();
-////            child.layout((int) child.getsRegion().left
-////                    ,(int) child.getsRegion().top
-////                    ,(int) child.getsRegion().right
-////                    ,(int) child.getsRegion().bottom);
-//        }
-//        Log.d(TAG, "onLayout: ");
-//    }
 
     @Override
     protected void onDraw(Canvas canvas) {
@@ -194,19 +135,17 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         for (int i = 0; i < getChildCount(); i++){
             ScannerView child = (ScannerView) getChildAt(i);
 
-            if (!isMoving){
+            if (!isDoingAnimation){
                 clipHighlight(canvas,child.getsRegion());
             }else {
                 canvas.drawColor(mMaskColor);
             }
-
             drawScannerLine(canvas,child);
         }
 
-        if (isMoving){
+        if (isDoingAnimation){
             postInvalidateDelayed(mRefreshTime);
         }
-
     }
 
     private void clipHighlight(Canvas canvas,RectF rectF){
@@ -244,9 +183,8 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
                 mChangedListener.onGuiderNext(scanIndex);
             }
             setAnimator(mScannerList.get(0)
-                    , mScanTargets.get(scanIndex).getRegion());
+                    , mScanTargets.get(scanIndex));
         }else {
-            Log.d(TAG, "onGuiderFinished: ViewAction null");
             exit();
         }
 
@@ -257,53 +195,30 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     }
 
     //设置属性动画，主要是将ScannerView从上一个地方移动到下一个目标然后放大
-    private void setAnimator(final ScannerView scannerView, RectF toRegion){
-        mScannerList.get(0).setScannerRegion(toRegion);
+    private void setAnimator(final ScannerView scannerView, ScanTarget target){
+        mScannerList.get(0).setScannerRegion(target.getRegion());
 
-        ObjectAnimator moveAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLastRegion(),getCenterRectF(toRegion));
+        ObjectAnimator moveAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLastRegion(),getCenterRectF(target.getRegion()));
         ObjectAnimator expandAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLayoutRegion(),scannerView.getsRegion());
-
-        AnimatorSet doAnimator = new AnimatorSet();
-        doAnimator.play(moveAnimator).before(expandAnimator);
 
         moveAnimator.setDuration(mScanTargets.get(scanIndex).getMoveDuration());
         expandAnimator.setDuration(mScanTargets.get(scanIndex).getScaleDuration());
 
-        moveAnimator.addListener(new Animator.AnimatorListener() {
-            @Override
-            public void onAnimationStart(Animator animation) {
-                scannerView.setState(ScannerView.MOVING);
-            }
-
-            @Override
-            public void onAnimationEnd(Animator animation) {
-                scannerView.setState(ScannerView.EXPANDING);
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
-            }
-        });
+        AnimatorSet doAnimator = new AnimatorSet();
+        doAnimator.play(moveAnimator).before(expandAnimator);
 
         doAnimator.addListener(new Animator.AnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
                 mGuidePopupWindow.dismiss();
-
-                isMoving = true;
+                isDoingAnimation = true;
                 setClickable(false);
                 postInvalidate();
             }
 
             @Override
             public void onAnimationEnd(Animator animation) {
-                isMoving = false;
+                isDoingAnimation = false;
                 setClickable(true);
                 showWindow();
                 scanIndex ++;
@@ -384,12 +299,9 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
     public void exit(){
         if (mChangedListener != null){
-            Log.d(TAG, "onGuiderFinished: ViewAction");
             mChangedListener.onGuiderFinished();
         }
-
         reset();
-
         mYGuider.setIsPreparing(false);
         ViewGroup parent = (ViewGroup)getParent();
         parent.removeView(this);
@@ -418,6 +330,5 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
-        Log.d(TAG, "onDetachedFromWindow: ");
     }
 }

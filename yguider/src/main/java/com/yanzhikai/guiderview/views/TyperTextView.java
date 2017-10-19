@@ -5,7 +5,6 @@ import android.content.res.TypedArray;
 import android.os.Handler;
 import android.os.Message;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.widget.TextView;
 
 import com.yanzhikai.guiderview.R;
@@ -16,6 +15,10 @@ import java.util.Random;
  * Typer Effect
  * Created by hanks on 2017/3/15.
  * Modified by yanzhikai on 2017/9/22
+ * 修改自hanks的https://github.com/hanks-zyh/HTextView
+ * 新增了可以立刻显示全部的方法
+ * 改成可以重复播放
+ * 加入了播放状态的回调接口
  */
 
 public class TyperTextView extends TextView {
@@ -28,7 +31,7 @@ public class TyperTextView extends TextView {
     private ShowHandler handler;
     private int charIncrease;
     private int showingIncrease;
-    private int typerSpeed;
+    private int typerRefreshTime;
     private AnimationListener animationListener;
 
     public TyperTextView(Context context) {
@@ -43,7 +46,7 @@ public class TyperTextView extends TextView {
         super(context, attrs, defStyleAttr);
 
         TypedArray typedArray = getContext().obtainStyledAttributes(attrs, R.styleable.TyperTextView);
-        typerSpeed = typedArray.getInt(R.styleable.TyperTextView_typerSpeed, 100);
+        typerRefreshTime = typedArray.getInt(R.styleable.TyperTextView_typerRefreshTime, 100);
         charIncrease = typedArray.getInt(R.styleable.TyperTextView_charIncrease, 1);
         typedArray.recycle();
 
@@ -51,8 +54,6 @@ public class TyperTextView extends TextView {
         random = new Random();
         mText = getText();
         handler = new ShowHandler();
-
-
     }
 
     public void setAnimationListener(AnimationListener listener) {
@@ -60,12 +61,12 @@ public class TyperTextView extends TextView {
     }
 
 
-    public int getTyperSpeed() {
-        return typerSpeed;
+    public int getTyperRefreshTime() {
+        return typerRefreshTime;
     }
 
-    public void setTyperSpeed(int typerSpeed) {
-        this.typerSpeed = typerSpeed;
+    public void setTyperRefreshTime(int typerRefreshTime) {
+        this.typerRefreshTime = typerRefreshTime;
     }
 
     public int getCharIncrease() {
@@ -120,7 +121,7 @@ public class TyperTextView extends TextView {
 
                         append(mText.subSequence(currentLength, currentLength + showingIncrease));
 
-                        long randomTime = typerSpeed + random.nextInt(typerSpeed);
+                        long randomTime = typerRefreshTime + random.nextInt(typerRefreshTime);
                         Message message = Message.obtain();
                         message.what = SHOWING;
                         handler.sendMessageDelayed(message, randomTime);

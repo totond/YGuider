@@ -13,7 +13,7 @@ import com.yanzhikai.guiderview.R;
 
 
 /**
- * Created by Administrator on 2017/9/29 0029.
+ * 用于显示说明文字的弹窗
  */
 
 public class GuidePopupWindow extends PopupWindow {
@@ -131,9 +131,9 @@ public class GuidePopupWindow extends PopupWindow {
         }
     }
 
-    public void setTyperSpeed(int speed) {
+    public void setTyperRefreshTime(int refreshTime) {
         if (mTyperTextView != null) {
-            mTyperTextView.setTyperSpeed(speed);
+            mTyperTextView.setTyperRefreshTime(refreshTime);
         }
     }
 

@@ -37,7 +37,7 @@ publish {
     repoName = 'CustomViewRepository'
     groupId = 'com.yanzhikaijky'
     artifactId = 'YGuider'
-    publishVersion = '0.9.0'
+    publishVersion = '0.9.1'
     desc = 'a Android APP Guider'
     website = 'https://github.com/totond/YGuider'
 }
