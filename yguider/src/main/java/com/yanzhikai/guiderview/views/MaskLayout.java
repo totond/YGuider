@@ -44,6 +44,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     private GuidePopupWindow mGuidePopupWindow;
     private OnGuiderChangedListener mChangedListener;
     private int mRefreshTime = 20;
+    private int mMoveDuration = 500, mExpandDuration = 500;
     private @ColorInt int mMaskColor;
 
 
@@ -177,6 +178,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         }
     }
 
+
     public void onNext(){
         if (scanIndex < mScanTargets.size()) {
             if ((mChangedListener != null)){
@@ -201,11 +203,11 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         ObjectAnimator moveAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLastRegion(),getCenterRectF(target.getRegion()));
         ObjectAnimator expandAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLayoutRegion(),scannerView.getsRegion());
 
-        moveAnimator.setDuration(mScanTargets.get(scanIndex).getMoveDuration());
-        expandAnimator.setDuration(mScanTargets.get(scanIndex).getScaleDuration());
+        moveAnimator.setDuration(mMoveDuration);
+        expandAnimator.setDuration(mExpandDuration);
 
         AnimatorSet doAnimator = new AnimatorSet();
-        doAnimator.play(moveAnimator).before(expandAnimator);
+        doAnimator.play(expandAnimator).after(moveAnimator);
 
         doAnimator.addListener(new Animator.AnimatorListener() {
             @Override
@@ -273,6 +275,14 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
     public void setOnGuiderClickListener(OnGuiderClickListener onGuiderClickListener) {
         this.mClickListener = onGuiderClickListener;
+    }
+
+    public void setMoveDuration(int moveDuration) {
+        this.mMoveDuration = moveDuration;
+    }
+
+    public void setExpandDuration(int expandDuration) {
+        this.mExpandDuration = expandDuration;
     }
 
     public void setOnGuiderChangedListener(OnGuiderChangedListener mChangedListener) {

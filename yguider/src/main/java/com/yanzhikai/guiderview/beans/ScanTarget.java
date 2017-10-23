@@ -9,12 +9,17 @@ import android.view.ViewGroup;
  */
 
 public class ScanTarget {
+    //目标View
     private View mTargetView;
+    //目标区域
     private RectF mRegion;
+    //说明文字、跳过/忽略帮助的按钮的文字、下一步按钮的文字
     private String mShowText, mJumpText, mNextText;
-    private int mMoveDuration = 500, mScaleDuration = 500;
+    //弹出窗口的宽高
     private int mWindowWidth = 300, mWindowHeight = ViewGroup.LayoutParams.WRAP_CONTENT;
+    //弹处窗口的XY偏移量，初始位置是在搜索框的正中下方
     private int wOffsetX = 0, wOffsetY = 0;
+    //判断是否区域
     private boolean mIsRegion = false;
 
     public ScanTarget(View targetView, String text, int wOffsetX, int wOffsetY){
@@ -65,14 +70,6 @@ public class ScanTarget {
         this.mWindowHeight = windowHeight;
     }
 
-    public void setMoveDuration(int mMoveDuration) {
-        this.mMoveDuration = mMoveDuration;
-    }
-
-    public void setScaleDuration(int mScaleDuration) {
-        this.mScaleDuration = mScaleDuration;
-    }
-
     public int getWindowWidth() {
         return mWindowWidth;
     }
@@ -99,14 +96,6 @@ public class ScanTarget {
 
     public int getwOffsetY() {
         return wOffsetY;
-    }
-
-    public int getMoveDuration() {
-        return mMoveDuration;
-    }
-
-    public int getScaleDuration() {
-        return mScaleDuration;
     }
 
     public RectF getRegion() {

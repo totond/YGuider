@@ -25,11 +25,9 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
-
     compileOptions {
         encoding "UTF-8"
     }
-
 }
 
 publish {
@@ -37,7 +35,7 @@ publish {
     repoName = 'CustomViewRepository'
     groupId = 'com.yanzhikaijky'
     artifactId = 'YGuider'
-    publishVersion = '0.9.1'
+    publishVersion = '0.9.2'
     desc = 'a Android APP Guider'
     website = 'https://github.com/totond/YGuider'
 }
