@@ -47,10 +47,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         , "", "Finish");
 
         mYGuider.prepare();
-        mYGuider.setMaskMoveDuration(500);
-        mYGuider.setExpandDuration(500);
+
+//        mYGuider.setMaskMoveDuration(500);
+//        mYGuider.setExpandDuration(500);
 //        mYGuider.setMaskRefreshTime(30);
-        mYGuider.setWindowContent(R.layout.tips_window_layout_test);
+//        mYGuider.setWindowContent(R.layout.tips_window_layout_test);
 //        mYGuider.setWindowTyperTextSize(10);
 //        mYGuider.setWindowJumpAndNextTextSize(8);
 //        mYGuider.setNextText("下一步");
@@ -77,10 +78,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (view.getId()) {
             case R.id.btn1:
 //                mYGuider = new YGuider(this);
-                mYGuider.addNextTarget(btn1, "tes1", 0, 0);
+//                mYGuider.addNextTarget(btn1, "tes1", 0, 0);
 //                mYGuider.removeTarget(0);
-                mYGuider.addNextTarget(btn2, "test2", 0, 0);
-                mYGuider.prepare();
+//                mYGuider.addNextTarget(btn2, "test2", 0, 0);
+//                mYGuider.prepare();
                 mYGuider.startGuide();
                 break;
             case R.id.btn2:

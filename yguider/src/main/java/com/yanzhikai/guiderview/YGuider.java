@@ -11,6 +11,7 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
+import com.yanzhikai.guiderview.interfaces.OnGuiderChangedListener;
 import com.yanzhikai.guiderview.views.MaskLayout;
 import com.yanzhikai.guiderview.beans.ScanTarget;
 import com.yanzhikai.guiderview.interfaces.OnGuiderClickListener;
@@ -63,6 +64,9 @@ public class YGuider {
         mMask.setScanTargets(mScanTargets);
     }
 
+    /**
+     * 开始Guide
+     */
     public void startGuide(){
         if (!mIsGuiding) {
             mIsGuiding = true;
@@ -185,15 +189,6 @@ public class YGuider {
         mMask.onNext();
     }
 
-    //获取ContentView在屏幕位置
-    private void getContentLocation(){
-        int[] contentLocation = {0,0};
-        mContentView.getLocationOnScreen(contentLocation);
-        mContentLocationX = contentLocation[0];
-        mContentLocationY = contentLocation[1];
-
-    }
-
     /**
      * 移除目标
      * @param index 目标的index
@@ -214,7 +209,11 @@ public class YGuider {
         mScanTargets.clear();
     }
 
-    //在View初始化宽高属性之后，获取它们的宽高信息，写入目标列表
+    /**
+     * 判断在当前ContentView是否已经初始化宽高属性
+     * 如果是，则直接获取目标View的位置信息，写入目标列表
+     * 如果不是，则等到ContentView初始化宽高属性之后再获取
+     */
     public void prepare(){
         ViewTreeObserver observerD = mContentView.getViewTreeObserver();
         if (mContentView.getWidth() != 0 && mContentView.getHeight() != 0) {
@@ -228,6 +227,14 @@ public class YGuider {
                 }
             });
         }
+    }
+
+    //获取ContentView在屏幕位置
+    private void getContentLocation(){
+        int[] contentLocation = {0,0};
+        mContentView.getLocationOnScreen(contentLocation);
+        mContentLocationX = contentLocation[0];
+        mContentLocationY = contentLocation[1];
     }
 
     //用于将目标View转为目标坐标区域
@@ -260,7 +267,9 @@ public class YGuider {
                 ,location[1] + view.getHeight());
     }
 
-    //退出新手引导
+    /**
+     * 退出新手引导
+     */
     public void cancelGuide(){
         if (mIsGuiding) {
             mMask.exit();
@@ -268,7 +277,7 @@ public class YGuider {
     }
 
     /**
-     * 设置扫描框动画刷新的频率
+     * 设置扫描框动画刷新的时间间隔，默认值是20
      * @param refreshTime 单位是ms
      */
     public void setMaskRefreshTime(int refreshTime){
@@ -276,7 +285,7 @@ public class YGuider {
     }
 
     /**
-     * 设置扫描框移动动画的持续时间
+     * 设置扫描框移动动画的持续时间，默认值是500
      * @param moveDuration 单位是ms
      */
     public void setMaskMoveDuration(int moveDuration) {
@@ -284,57 +293,91 @@ public class YGuider {
     }
 
     /**
-     * 设置扫描框扩大动画的持续时间
+     * 设置扫描框扩大动画的持续时间，默认值是500
      * @param expandDuration 单位是ms
      */
     public void setExpandDuration(int expandDuration) {
         mMask.setExpandDuration(expandDuration);
     }
 
+    /**
+     * 设置遮罩层的颜色，最后是设置成透明的，默认颜色是#aa222222
+     * @param color 颜色
+     */
     public void setMaskColor(@ColorInt int color){
         mMask.setMackColor(color);
     }
 
+    /**
+     * 设置画扫描框的画笔
+     * @param paint 画笔
+     */
     public void setMaskPaint(Paint paint){
         mMask.setsPaint(paint);
     }
 
     /**
-     * 设置弹窗里面TextView文字出现的速度
-     * @param refreshTime 每次增加文字的时间间隔
+     * 设置弹窗里面TextView文字出现的速度，默认值是100
+     * @param refreshTime 每次增加文字的时间间隔，单位ms
      */
     public void setWindowTyperRefreshTime(int refreshTime){
         mMask.getWindow().setTyperRefreshTime(refreshTime);
     }
 
+    /**
+     * 弹窗里面说明文字的字体大小，默认值是18sp
+     * @param size 字体大小
+     */
     public void setWindowTyperTextSize(int size){
         mMask.getWindow().setTyperTextSize(size);
     }
 
     /**
-     * 设置弹窗里面TextView文字的增长速度
+     * 设置弹窗里面TextView文字的增长速度，默认值是1
      * @param increase 每次增加多少个字符
      */
     public void setWindowTyperIncrease(int increase){
         mMask.getWindow().setTyperIncrease(increase);
     }
 
+    /**
+     * 设置跳过按钮的文字
+     * @param jumpText 跳过文字
+     */
     public void setJumpText(String jumpText) {
         defaultJumpText = jumpText;
     }
 
+    /**
+     * 设置下一步按钮的文字
+     * @param nextText 下一步文字
+     */
     public void setNextText(String nextText) {
         defaultNextText = nextText;
     }
 
+    /**
+     * 设置弹窗背景
+     * @param idRes 背景DrawableId
+     */
     public void setWindowBackground(@DrawableRes int idRes){
         mMask.getWindow().setContentBackgroundId(idRes);
     }
 
+    /**
+     * 设置跳过和下一步按钮文字大小
+     * @param size 文字字体大小
+     */
     public void setWindowJumpAndNextTextSize(int size){
         mMask.getWindow().setTvSize(size);
     }
 
+    /**
+     * 设置自定义弹窗布局
+     * 注意新的布局要有TyperTextView类，id设置为ttv_tips
+     * 跳过按钮和下一步按钮可以选择实现，但是有的话id请分别设置为tv_jump和tv_next，其他可以自定义
+     * @param layouId 布局的id
+     */
     public void setWindowContent(@LayoutRes int layouId){
         mMask.getWindow().setContent(layouId);
     }
@@ -347,10 +390,26 @@ public class YGuider {
         return mIsGuiding;
     }
 
+    /**
+     * 设置点击回调
+     * @param guiderClickListener 可以传入OnGuiderClickListener和OnGuiderListener的子类
+     */
     public void setOnGuiderClickListener(OnGuiderClickListener guiderClickListener){
         mMask.setOnGuiderClickListener(guiderClickListener);
     }
 
+    /**
+     * 设置状态回调
+     * @param onGuiderChangedListener 可以传入OnGuiderChangedListener和OnGuiderListener的子类
+     */
+    public void setOnGuiderChangedListener(OnGuiderChangedListener onGuiderChangedListener){
+        mMask.setOnGuiderChangedListener(onGuiderChangedListener);
+    }
+
+    /**
+     * 设置状态所有回调
+     * @param onGuiderListener 可以传入OnGuiderListener的子类
+     */
     public void setOnGuiderListener(OnGuiderListener onGuiderListener){
         mMask.setOnGuiderListener(onGuiderListener);
     }

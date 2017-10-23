@@ -17,7 +17,7 @@ public interface OnGuiderClickListener {
     void onNextClick(int nextIndex);
 
     /**
-     * 当前高亮目标区域被点击时的回调
+     * 当前高亮/扫描目标区域被点击时的回调
      * @param index 当前目标区域的index
      */
     void onTargetClick(int index);
