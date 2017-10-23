@@ -7,3 +7,7 @@
 /build
 /captures
 .externalNativeBuild
+
+#add by yanzhikai
+.idea
+*.apk
