@@ -8,7 +8,7 @@
 ## 使用
 
 ### Gradle
-（刚刚上传的0.9.2版本可能要等几个小时）
+
 ```
 compile 'com.yanzhikaijky:YGuider:0.9.2'
 ```
