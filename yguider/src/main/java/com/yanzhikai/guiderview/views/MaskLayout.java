@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 
 import com.yanzhikai.guiderview.R;
+import com.yanzhikai.guiderview.interfaces.AbstractAnimatorListener;
 import com.yanzhikai.guiderview.tools.RegionEvaluator;
 import com.yanzhikai.guiderview.beans.ScanTarget;
 import com.yanzhikai.guiderview.YGuider;
@@ -149,6 +150,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         }
     }
 
+    //剪切出高亮部分，给其余部分上色
     private void clipHighlight(Canvas canvas,RectF rectF){
         canvas.save();
         canvas.clipRect(rectF, Region.Op.DIFFERENCE);
@@ -209,12 +211,13 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         AnimatorSet doAnimator = new AnimatorSet();
         doAnimator.play(expandAnimator).after(moveAnimator);
 
-        doAnimator.addListener(new Animator.AnimatorListener() {
+        doAnimator.addListener(new AbstractAnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
                 mGuidePopupWindow.dismiss();
-                isDoingAnimation = true;
                 setClickable(false);
+                //启动不断draw来刷新扫描框移动的画面
+                isDoingAnimation = true;
                 postInvalidate();
             }
 
@@ -224,16 +227,6 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
                 setClickable(true);
                 showWindow();
                 scanIndex ++;
-            }
-
-            @Override
-            public void onAnimationCancel(Animator animation) {
-
-            }
-
-            @Override
-            public void onAnimationRepeat(Animator animation) {
-
             }
         });
 
