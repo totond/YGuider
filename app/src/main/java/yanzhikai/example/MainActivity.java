@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         mYGuider.setOnGuiderListener(new MyGuiderListener());
+        mYGuider.startGuide();
     }
 
     //用于测试setMaskPaint()

@@ -5,6 +5,7 @@ import android.graphics.Paint;
 import android.graphics.RectF;
 import android.support.annotation.ColorInt;
 import android.support.annotation.DrawableRes;
+import android.support.annotation.IdRes;
 import android.support.annotation.LayoutRes;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -29,22 +30,36 @@ public class YGuider {
     private Activity mActivity;
     private FrameLayout mContentView;
     private MaskLayout mMask;
+    //用于存放扫描目标区域
     private ArrayList<RectF> mScanRegions;
+    //用于存放扫描目标View
     private ArrayList<ScanTarget> mScanTargets;
     private int mContentLocationX = 0, mContentLocationY = 0;
     private boolean mIsGuiding = false;
     //PopupWindow相关属性
     private String defaultJumpText,defaultNextText;
+    //要获取的ContentView的ID
+    private @IdRes int mContentId;
 
     public YGuider(Activity activity){
+        this(activity,android.R.id.content);
+    }
+
+    /**
+     * YGuider构造方法
+     * @param activity 传入Activity主要是为了可以获取DecorView
+     * @param contentId 用于找到需要遮罩的Layout
+     */
+    public YGuider(Activity activity, @IdRes int contentId){
         mActivity = activity;
+        mContentId = contentId;
         init();
     }
 
     private void init(){
         //通过DecorView获取
         FrameLayout decorView = (FrameLayout)mActivity.getWindow().getDecorView();
-        mContentView = (FrameLayout) decorView.findViewById(android.R.id.content);
+        mContentView = (FrameLayout) decorView.findViewById(mContentId);
 
         mScanRegions = new ArrayList<>();
         mScanTargets = new ArrayList<>();
@@ -61,7 +76,17 @@ public class YGuider {
         mMask = new MaskLayout(mActivity,this);
         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         mMask.setLayoutParams(layoutParams);
+        //绑定列表
         mMask.setScanTargets(mScanTargets);
+    }
+
+    /**
+     * 设置MaskLayout的父Layout,调用此方法会重置YGuider
+     * @param contentId 父Layout的ID
+     */
+    public void setContentId(int contentId) {
+        this.mContentId = contentId;
+        init();
     }
 
     /**
@@ -72,7 +97,6 @@ public class YGuider {
             mIsGuiding = true;
             mContentView.addView(mMask);
         }
-
     }
 
     /**
@@ -212,7 +236,7 @@ public class YGuider {
     /**
      * 判断在当前ContentView是否已经初始化宽高属性
      * 如果是，则直接获取目标View的位置信息，写入目标列表
-     * 如果不是，则等到ContentView初始化宽高属性之后再获取
+     * 如果不是，则等到ContentView初始化宽高属性之后再获取，因为它会等子View全部Layout完了再进行Layout
      */
     public void prepare(){
         ViewTreeObserver observerD = mContentView.getViewTreeObserver();
@@ -229,10 +253,10 @@ public class YGuider {
         }
     }
 
-    //获取ContentView在屏幕位置
+    //获取ContentView在屏幕位置，相对Window的坐标坐标系
     private void getContentLocation(){
         int[] contentLocation = {0,0};
-        mContentView.getLocationOnScreen(contentLocation);
+        mContentView.getLocationInWindow(contentLocation);
         mContentLocationX = contentLocation[0];
         mContentLocationY = contentLocation[1];
     }
@@ -242,12 +266,14 @@ public class YGuider {
         getContentLocation();
         for (ScanTarget scanTarget : mScanTargets) {
             if (!scanTarget.getIsRegion()) {
-                scanTarget.setRegion(getViewLocationRectF(scanTarget.getTargetView()));
-                //迁移区域.因为区域是以相对ContentView的坐标系定义的
-                scanTarget.getRegion().offset(-mContentLocationX, -mContentLocationY);
-                mScanRegions.add(scanTarget.getRegion());
+//                scanTarget.setRegion(getViewLocationRectF(scanTarget.getTargetView()));
+                //迁移区域.因为需要的区域是相对于ContentView的坐标系的，getLocationInWindow()获取的坐标是相对于Window的坐标系的
+                //所以要用在Window坐标系里面的，View的坐标减去mContentView的坐标，就得到View相对于mContentView的坐标了
+//                scanTarget.getRegion().offset(-mContentLocationX, -mContentLocationY);
+                mScanRegions.add(scanTarget.viewToRegion(-mContentLocationX, -mContentLocationY));
             }
 
+            //设置跳过和下一步的字符
             if (scanTarget.getJumpText() == null) {
                 scanTarget.setJumpText(defaultJumpText);
             }
@@ -257,6 +283,7 @@ public class YGuider {
         }
     }
 
+    //获取View的位置矩阵，相对于Window的坐标系
     private RectF getViewLocationRectF(View view){
         int[] location = {0,0};
         view.getLocationInWindow(location);
@@ -382,8 +409,8 @@ public class YGuider {
         mMask.getWindow().setContent(layouId);
     }
 
-    public void setIsPreparing(boolean isPreparing) {
-        mIsGuiding = isPreparing;
+    public void setIsGuiding(boolean isGuiding) {
+        mIsGuiding = isGuiding;
     }
 
     public boolean getIsPreparing(){

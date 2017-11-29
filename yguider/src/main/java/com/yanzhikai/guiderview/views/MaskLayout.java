@@ -47,6 +47,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     private int mRefreshTime = 20;
     private int mMoveDuration = 500, mExpandDuration = 500;
     private @ColorInt int mMaskColor;
+    private AnimatorSet mDoAnimator;
 
 
     public MaskLayout(Context context, YGuider yGuider) {
@@ -118,7 +119,6 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
     @Override
     protected void onLayout(boolean changed, int l, int t, int r, int b) {
-        Log.d("guiderviewV", "onLayout: ");
         super.onLayout(changed, l, t, r, b);
     }
 
@@ -171,22 +171,22 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
     }
 
+    //Mask被点击
     @Override
     public void onClick(View v) {
-//        onNext();
-
         if (mClickListener != null){
             mClickListener.onMaskClick();
         }
     }
 
-
+    //下一步
     public void onNext(){
         if (scanIndex < mScanTargets.size()) {
+            //如果不是最后一个Target
             if ((mChangedListener != null)){
                 mChangedListener.onGuiderNext(scanIndex);
             }
-            setAnimator(mScannerList.get(0)
+            animate(mScannerList.get(0)
                     , mScanTargets.get(scanIndex));
         }else {
             exit();
@@ -199,7 +199,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     }
 
     //设置属性动画，主要是将ScannerView从上一个地方移动到下一个目标然后放大
-    private void setAnimator(final ScannerView scannerView, ScanTarget target){
+    private void animate(final ScannerView scannerView, ScanTarget target){
         mScannerList.get(0).setScannerRegion(target.getRegion());
 
         ObjectAnimator moveAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLastRegion(),getCenterRectF(target.getRegion()));
@@ -208,10 +208,10 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         moveAnimator.setDuration(mMoveDuration);
         expandAnimator.setDuration(mExpandDuration);
 
-        AnimatorSet doAnimator = new AnimatorSet();
-        doAnimator.play(expandAnimator).after(moveAnimator);
+        mDoAnimator = new AnimatorSet();
+        mDoAnimator.play(expandAnimator).after(moveAnimator);
 
-        doAnimator.addListener(new AbstractAnimatorListener() {
+        mDoAnimator.addListener(new AbstractAnimatorListener() {
             @Override
             public void onAnimationStart(Animator animation) {
                 mGuidePopupWindow.dismiss();
@@ -230,7 +230,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
             }
         });
 
-        doAnimator.start();
+        mDoAnimator.start();
     }
 
     private void showWindow(){
@@ -300,12 +300,16 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         onNext();
     }
 
+    //退出时候做的操作
     public void exit(){
         if (mChangedListener != null){
             mChangedListener.onGuiderFinished();
         }
+        if (mDoAnimator != null) {
+            mDoAnimator.cancel();
+        }
         reset();
-        mYGuider.setIsPreparing(false);
+        mYGuider.setIsGuiding(false);
         ViewGroup parent = (ViewGroup)getParent();
         parent.removeView(this);
         mGuidePopupWindow.dismiss();

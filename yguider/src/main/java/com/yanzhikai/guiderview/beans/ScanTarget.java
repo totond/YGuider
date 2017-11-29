@@ -44,6 +44,26 @@ public class ScanTarget {
         }
     }
 
+    public RectF viewToRegion(int offsetX, int offsetY){
+        if (!mIsRegion){
+            RectF rectF = getViewLocationRectF(mTargetView);
+            rectF.offset(offsetX,offsetY);
+            setRegion(rectF);
+        }
+        return mRegion;
+    }
+
+    //获取View的位置矩阵，相对于Window的坐标系
+    private RectF getViewLocationRectF(View view){
+        int[] location = {0,0};
+        view.getLocationInWindow(location);
+        return new RectF(
+                location[0]
+                ,location[1]
+                ,location[0] + view.getWidth()
+                ,location[1] + view.getHeight());
+    }
+
     public void setRegion(RectF mRegion) {
         this.mRegion = mRegion;
         init();
