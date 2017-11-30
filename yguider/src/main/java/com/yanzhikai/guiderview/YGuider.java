@@ -239,22 +239,22 @@ public class YGuider {
      * 如果不是，则等到ContentView初始化宽高属性之后再获取，因为它会等子View全部Layout完了再进行Layout
      */
     public void prepare(){
-        ViewTreeObserver observerD = mContentView.getViewTreeObserver();
-        if (mContentView.getWidth() != 0 && mContentView.getHeight() != 0) {
-            prepareTargets();
-        }else {
-            observerD.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-                    mContentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    prepareTargets();
-                }
-            });
-        }
+//        ViewTreeObserver observerD = mContentView.getViewTreeObserver();
+//        if (mContentView.getWidth() != 0 && mContentView.getHeight() != 0) {
+//            prepareTargets();
+//        }else {
+//            observerD.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
+//                @Override
+//                public void onGlobalLayout() {
+//                    mContentView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+//                    prepareTargets();
+//                }
+//            });
+//        }
     }
 
     //获取ContentView在屏幕位置，相对Window的坐标坐标系
-    private void getContentLocation(){
+    public void checkContentLocation(){
         int[] contentLocation = {0,0};
         mContentView.getLocationInWindow(contentLocation);
         mContentLocationX = contentLocation[0];
@@ -263,23 +263,23 @@ public class YGuider {
 
     //用于将目标View转为目标坐标区域
     private void prepareTargets(){
-        getContentLocation();
+        checkContentLocation();
         for (ScanTarget scanTarget : mScanTargets) {
             if (!scanTarget.getIsRegion()) {
 //                scanTarget.setRegion(getViewLocationRectF(scanTarget.getTargetView()));
                 //迁移区域.因为需要的区域是相对于ContentView的坐标系的，getLocationInWindow()获取的坐标是相对于Window的坐标系的
                 //所以要用在Window坐标系里面的，View的坐标减去mContentView的坐标，就得到View相对于mContentView的坐标了
 //                scanTarget.getRegion().offset(-mContentLocationX, -mContentLocationY);
-                mScanRegions.add(scanTarget.viewToRegion(-mContentLocationX, -mContentLocationY));
+//                mScanRegions.add(scanTarget.viewToRegion(-mContentLocationX, -mContentLocationY));
             }
 
-            //设置跳过和下一步的字符
-            if (scanTarget.getJumpText() == null) {
-                scanTarget.setJumpText(defaultJumpText);
-            }
-            if (scanTarget.getNextText() == null) {
-                scanTarget.setNextText(defaultNextText);
-            }
+//            //设置跳过和下一步的字符
+//            if (scanTarget.getJumpText() == null) {
+//                scanTarget.setJumpText(defaultJumpText);
+//            }
+//            if (scanTarget.getNextText() == null) {
+//                scanTarget.setNextText(defaultNextText);
+//            }
         }
     }
 
@@ -301,6 +301,14 @@ public class YGuider {
         if (mIsGuiding) {
             mMask.exit();
         }
+    }
+
+    public int getContentLocationX() {
+        return mContentLocationX;
+    }
+
+    public int getContentLocationY() {
+        return mContentLocationY;
     }
 
     /**
@@ -375,12 +383,20 @@ public class YGuider {
         defaultJumpText = jumpText;
     }
 
+    public String getJumpText() {
+        return defaultJumpText;
+    }
+
     /**
      * 设置下一步按钮的文字
      * @param nextText 下一步文字
      */
     public void setNextText(String nextText) {
         defaultNextText = nextText;
+    }
+
+    public String getNextText() {
+        return defaultNextText;
     }
 
     /**

@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         , 300, ViewGroup.LayoutParams.WRAP_CONTENT
                         , "", "Finish");
 
-        mYGuider.prepare();
+//        mYGuider.prepare();
 
 //        mYGuider.setMaskMoveDuration(500);
 //        mYGuider.setExpandDuration(500);
@@ -100,6 +100,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         @Override
         public void onNextClick(int nextIndex) {
             Log.d(TAG, "onNextClick: " + nextIndex);
+//            if (nextIndex > 2 ){
+//                if (nextIndex % 2 == 0){
+//                    mYGuider.addNextTarget(btn1,"这是新增的",0,0);
+//                }else {
+//                    mYGuider.addNextTarget(btn2,"这是新增的",0,0);
+//                }
+//            }
         }
 
         @Override

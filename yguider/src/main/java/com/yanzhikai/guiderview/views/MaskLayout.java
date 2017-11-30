@@ -48,6 +48,9 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     private int mMoveDuration = 500, mExpandDuration = 500;
     private @ColorInt int mMaskColor;
     private AnimatorSet mDoAnimator;
+    //PopupWindow相关属性
+//    private String defaultJumpText = getResources().getString(R.string.text_jump);
+//    private String defaultNextText = getResources().getString(R.string.text_next);
 
 
     public MaskLayout(Context context, YGuider yGuider) {
@@ -56,6 +59,13 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         init(context);
     }
 
+
+    @Override
+    protected void onSizeChanged(int w, int h, int oldw, int oldh) {
+        super.onSizeChanged(w, h, oldw, oldh);
+        Log.d(TAG, "onSizeChanged: ");
+        mYGuider.checkContentLocation();
+    }
 
     private void init(Context context) {
         mContext = context;
@@ -70,6 +80,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
         mGuidePopupWindow = new GuidePopupWindow(mContext);
         mGuidePopupWindow.setContentBackgroundId(R.drawable.dialog_shape);
         mGuidePopupWindow.setOnWindowClickListener(this);
+
 
         if (mChangedListener != null){
             mChangedListener.onGuiderStart();
@@ -200,7 +211,19 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
 
     //设置属性动画，主要是将ScannerView从上一个地方移动到下一个目标然后放大
     private void animate(final ScannerView scannerView, ScanTarget target){
-        mScannerList.get(0).setScannerRegion(target.getRegion());
+        if (target.getIsRegion()) {
+            mScannerList.get(0).setScannerRegion(target.getRegion());
+        }else {
+            mScannerList.get(0).setScannerRegion(target.viewToRegion(-mYGuider.getContentLocationX(),-mYGuider.getContentLocationY()));
+        }
+
+        //设置跳过和下一步的字符
+        if (target.getJumpText() == null) {
+            target.setJumpText(mYGuider.getJumpText());
+        }
+        if (target.getNextText() == null) {
+            target.setNextText(mYGuider.getNextText());
+        }
 
         ObjectAnimator moveAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLastRegion(),getCenterRectF(target.getRegion()));
         ObjectAnimator expandAnimator = ObjectAnimator.ofObject(scannerView,"layoutRegion",new RegionEvaluator(),scannerView.getLayoutRegion(),scannerView.getsRegion());
@@ -245,6 +268,7 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
                 ,mScanTargets.get(scanIndex).getwOffsetY());
         mGuidePopupWindow.showGuideText(scanTarget.getShowText());
     }
+
 
     public void setRefreshTime(int refreshTime) {
         this.mRefreshTime = refreshTime;
@@ -337,5 +361,9 @@ public class MaskLayout extends RelativeLayout implements View.OnClickListener,G
     @Override
     protected void onDetachedFromWindow() {
         super.onDetachedFromWindow();
+        Log.d(TAG, "onDetachedFromWindow: ");
+        mGuidePopupWindow.dismiss();
     }
+
+
 }
