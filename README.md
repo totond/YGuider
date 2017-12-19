@@ -5,6 +5,9 @@
 ## 简介
 　　这是一个扫描框风格的新手引导，效果如上图。
 
+## 由于在重构代码中，最新版本的Demo暂时不可用，想看Demo的请clone[在Nov 25, 2017前提交的Commit](https://github.com/totond/YGuider/tree/1894de1bea200c195fbfc8ef52a55fa2300d3080)，工作和生活有点忙，我也没想到拖这么久。
+
+
 ## 使用
 
 ### Gradle
