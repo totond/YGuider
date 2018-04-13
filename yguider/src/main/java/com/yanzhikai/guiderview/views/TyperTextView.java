@@ -18,7 +18,7 @@ import java.util.Random;
  * 修改自hanks的https://github.com/hanks-zyh/HTextView
  * 新增了可以立刻显示全部的方法
  * 改成可以重复播放
- * 加入了播放状态的回调接口
+ * 加入了播放状态的回调接口 tt
  */
 
 public class TyperTextView extends TextView {
